@@ -23,7 +23,6 @@ public class Player extends Rectangle {
     public void tick() {
         if (right && World.isFree(x + spd, y)) {
             x += spd;
-            ladoX = 1;
             direcao = Spritesheet.playerRight[curAnimation];
             curFrame++;
             if (curFrame == targetFrame) {
@@ -35,7 +34,7 @@ public class Player extends Rectangle {
             }
         } else if (left && World.isFree(x - spd, y)) {
             x -= spd;
-            ladoX = -1;
+
             direcao = Spritesheet.playerLeft[curAnimation];
             curFrame++;
             if (curFrame == targetFrame) {
@@ -50,7 +49,7 @@ public class Player extends Rectangle {
 
         if (up && World.isFree(x, y - spd)) {
             y -= spd;
-            ladoY = -1;
+
             direcao = Spritesheet.playerBack[curAnimation];
             curFrame++;
             if (curFrame == targetFrame) {
@@ -62,7 +61,6 @@ public class Player extends Rectangle {
             }
         } else if (down && World.isFree(x, y + spd)) {
             y += spd;
-            ladoY = 1;
             direcao = Spritesheet.playerFront[curAnimation];
             curFrame++;
             if (curFrame == targetFrame) {
@@ -73,25 +71,39 @@ public class Player extends Rectangle {
                 }
             }
         }
-        if(ladoX != 0) controleTiro = ladoX;
 
-        if (ladoX == 0 && ladoY == 0) {
-            ladoX = controleTiro;
+//        if (ladoX == 0 && ladoY == 0) {
+//            ladoX = controleTiro;
+//        }
+
+        if (tiroUp){
+            ladoY = -1;
+        }else if (tiroDown){
+            ladoY = 1;
+        }
+        if (tiroRight){
+            ladoX = 1;
+        }else if (tiroLeft){
+            ladoX = -1;
         }
 
         contadorTiro = contadorTiro + 1 + modificadorTiro;
 
 
-        if (contadorTiro == 30) {
+        shoot = ladoX != 0 || ladoY != 0;
 
-            if (shoot) {
-                bullets.add(new Bullet(x, y, dir, ladoX, ladoY));
+            if (contadorTiro == 30) {
+
+                if (shoot) {
+                    bullets.add(new Bullet(x, y, dir, ladoX, ladoY));
+                }
+                contadorTiro = 0;
             }
-            contadorTiro = 0;
-        }
 
-        ladoX = 0;
-        ladoY = 0;
+            ladoY = 0;
+            ladoX = 0;
+
+
         for (int i = 0; i < bullets.size(); i++) {
             bullets.get(i).tick();
         }
