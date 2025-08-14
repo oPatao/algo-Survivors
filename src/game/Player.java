@@ -9,7 +9,7 @@ import java.util.List;
 
 public class Player extends Rectangle {
 
-    public int spd = 4, curAnimation = 0, curFrame = 0, targetFrame = 15, dir = 1, contadorTiro, modificadorTiro, ladoX = 1,ladoY, controleTiro;
+    public int spd = 4, curAnimation = 0, curFrame = 0, targetFrame = 15, dir = 1, contadorTiro, modCadencia, ladoX,ladoY, modTiros = 1;
     public boolean right, left, up, down, shoot = true, tiroUp, tiroDown, tiroLeft, tiroRight;
     public BufferedImage direcao = Spritesheet.playerFront[0];
 
@@ -87,7 +87,7 @@ public class Player extends Rectangle {
             ladoX = -1;
         }
 
-        contadorTiro = contadorTiro + 1 + modificadorTiro;
+        contadorTiro = contadorTiro + 1 + modCadencia;
 
 
         shoot = ladoX != 0 || ladoY != 0;
@@ -95,8 +95,11 @@ public class Player extends Rectangle {
             if (contadorTiro == 30) {
 
                 if (shoot) {
-                    bullets.add(new Bullet(x, y, dir, ladoX, ladoY));
-                }
+
+                    for (int i = 1; i <= modTiros; i++) {
+                        bullets.add(new Bullet(x, y, dir, ladoX*i, ladoY*i));
+                    }
+                    }
                 contadorTiro = 0;
             }
 
