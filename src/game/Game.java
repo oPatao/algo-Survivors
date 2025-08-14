@@ -208,14 +208,26 @@ public class Game extends Canvas implements Runnable, KeyListener {
     @Override
     public void keyReleased(KeyEvent e) {
         if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-            player.right = false;
+            player.tiroRight = false;
         }else if(e.getKeyCode() == KeyEvent.VK_LEFT){
-            player.left = false;
+            player.tiroLeft = false;
         }
         if(e.getKeyCode() == KeyEvent.VK_UP) {
-            player.up = false;
+            player.tiroUp = false;
         }else if(e.getKeyCode() == KeyEvent.VK_DOWN){
+            player.tiroDown = false;
+        }
+
+
+        if (e.getKeyCode() == KeyEvent.VK_W) {
+            player.up = false;
+        }else if (e.getKeyCode() == KeyEvent.VK_S) {
             player.down = false;
+        }
+        if (e.getKeyCode() == KeyEvent.VK_A) {
+            player.left = false;
+        }else if (e.getKeyCode() == KeyEvent.VK_D) {
+            player.right = false;
         }
     }
 }
