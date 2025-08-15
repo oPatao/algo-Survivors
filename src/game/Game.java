@@ -16,6 +16,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public static Player player;
     public World world;
+    public static Logo logo;
 
     public static List<Inimigo> inimigos = new ArrayList<Inimigo>();
     public static int controleSpawn = 0, targetSpawn = 120, last = 6, score = 0, upgradeTarget = 100;
@@ -45,6 +46,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         player = new Player(512,512);
         world = new World(WIDTH, HEIGHT);
 
+        logo = new Logo((WIDTH/2) -144, 0);
+
         inimigos.add(new Inimigo(63,64));
 
         inicializarMods();
@@ -71,6 +74,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public void tick(){
         if(!startGame){
+
+            logo.tick(HEIGHT);
             framesAnimaçãoPontinosIni++;
             if (framesAnimaçãoPontinosIni == maxFramesPontinhos) {
                 framesAnimaçãoPontinosIni = 0;
@@ -81,6 +86,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
             }
             return;
         }
+
 
         if(isUpgrading){
             return;
@@ -135,7 +141,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         world.render(g);
         if (!startGame){
-
+            logo.render(g);
             g.setColor(Color.WHITE);
             g.setFont(new Font("Times New Roman", Font.BOLD, 32));
 
