@@ -28,6 +28,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public boolean isUpgrading = false;
 
+    private Musica BackgroundMusica;
+
     private List<Mod> mods;
     private List<Mod> modEscolha;
 
@@ -46,6 +48,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
         inimigos.add(new Inimigo(63,64));
 
         inicializarMods();
+
+        BackgroundMusica = new Musica("/levitate.wav");
+        BackgroundMusica.setVolume(0.8f);
+        BackgroundMusica.loopIni(1, 7);
     }
 
     private void inicializarMods(){
@@ -200,6 +206,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         frame.setVisible(true);
 
+
+
         new Thread(game).start();
     }
 
@@ -272,6 +280,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             startGame = true;
+            BackgroundMusica.setVolume(0.6f);
+            BackgroundMusica.loop();
         }
 
         if(e.getKeyCode() == KeyEvent.VK_RIGHT){
