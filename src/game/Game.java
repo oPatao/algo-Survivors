@@ -20,6 +20,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public static List<Inimigo> inimigos = new ArrayList<Inimigo>();
     public static int controleSpawn = 0, targetSpawn = 120, last = 6, score = 0, upgradeTarget = 100;
 
+    private int framesAnimaçãoPontinosIni = 0, maxFramesPontinhos = 20, estadoPontinhos = 0;
+    private String textoPontinho = ".";
+
     public boolean gameOver = false;
     public boolean startGame = false;
 
@@ -61,6 +64,18 @@ public class Game extends Canvas implements Runnable, KeyListener {
     }
 
     public void tick(){
+        if(!startGame){
+            framesAnimaçãoPontinosIni++;
+            if (framesAnimaçãoPontinosIni == maxFramesPontinhos) {
+                framesAnimaçãoPontinosIni = 0;
+                estadoPontinhos += 1;
+                if (estadoPontinhos > 2){
+                    estadoPontinhos = 0;
+                }
+            }
+            return;
+        }
+
         if(isUpgrading){
             return;
         }
@@ -114,13 +129,27 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         world.render(g);
         if (!startGame){
-            int contador;
 
-            for (contador = 0; contador <= 3; contador++){
-                g.setColor(Color.WHITE);
-                g.setFont(new Font("Times New Roman", Font.BOLD, 32));
-                g.drawString("Score: aperte Enter para iniciar...", WIDTH / 2, HEIGHT / 2);
-        }
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Times New Roman", Font.BOLD, 32));
+
+            if (estadoPontinhos == 0) {
+                textoPontinho = ".";
+            } else if (estadoPontinhos == 1) {
+                textoPontinho = "..";
+            } else {
+                textoPontinho = "...";
+            }
+
+            String mensagem = "Aperte ENTER para iniciar" + textoPontinho;
+
+            int textWidth = g.getFontMetrics().stringWidth(mensagem);
+            int x = (WIDTH - textWidth) / 2;
+            int y = HEIGHT / 2;
+
+            g.drawString(mensagem, x, y);
+
+
 
         }else {
             if(isUpgrading){
@@ -177,9 +206,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public static void spawnRandomInimigo(){
         Random rand = new Random();
         int pos = 1024/2, ini = 33, ini2 = HEIGHT - ini;
-        int evento = rand.nextInt(5);
-        System.out.println(ini2);
-        if (!(last == evento && new Random().nextInt(100) > 50)) {
+        int evento = rand.nextInt(4);
+        if (!(last == evento && new Random().nextInt(100) > 25)) {
 
             switch (evento){
                 case 0:

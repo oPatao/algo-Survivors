@@ -72,10 +72,6 @@ public class Player extends Rectangle {
             }
         }
 
-//        if (ladoX == 0 && ladoY == 0) {
-//            ladoX = controleTiro;
-//        }
-
         if (tiroUp){
             ladoY = -1;
         }else if (tiroDown){
@@ -92,12 +88,12 @@ public class Player extends Rectangle {
 
         shoot = ladoX != 0 || ladoY != 0;
 
-            if (contadorTiro == 30) {
+            if (contadorTiro >= 30) {
 
                 if (shoot) {
 
                     for (int i = 1; i <= modTiros; i++) {
-                        bullets.add(new Bullet(x, y, dir, ladoX*i, ladoY*i));
+                        bullets.add(new Bullet(x+(10*i*ladoY), y+(10*i*ladoX), dir, ladoX, ladoY));
                     }
                     }
                 contadorTiro = 0;
