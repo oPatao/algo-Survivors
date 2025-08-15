@@ -7,10 +7,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.image.BufferStrategy;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Random;
-import java.util.Scanner;
 
 
 public class Game extends Canvas implements Runnable, KeyListener {
@@ -20,10 +18,18 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public World world;
 
     public static List<Inimigo> inimigos = new ArrayList<Inimigo>();
-    public static int controleSpawn = 0, targetSpawn = 120, last = 6, score = 0;
+    public static int controleSpawn = 0, targetSpawn = 120, last = 6, score = 0, upgradeTarget = 100;
+
+    private int framesAnimaçãoPontinosIni = 0, maxFramesPontinhos = 20, estadoPontinhos = 0;
+    private String textoPontinho = ".";
 
     public boolean gameOver = false;
     public boolean startGame = false;
+
+    public boolean isUpgrading = false;
+
+    private List<Mod> mods;
+    private List<Mod> modEscolha;
 
     public Game(){
         this.addKeyListener(this);
@@ -38,9 +44,42 @@ public class Game extends Canvas implements Runnable, KeyListener {
         world = new World(WIDTH, HEIGHT);
 
         inimigos.add(new Inimigo(63,64));
+
+        inicializarMods();
+    }
+
+    private void inicializarMods(){
+        mods = new ArrayList<>();
+        mods.add(new Mod(Mod.EFEITO.AUMENTAR_CADENCIA));
+        mods.add(new Mod(Mod.EFEITO.AUMENTAR_VELOCIDADE));
+        mods.add(new Mod(Mod.EFEITO.AUMENTAR_QUANTIDADE_TIRO));
+    }
+    private void apresentarMods(){
+        isUpgrading = true;
+        modEscolha = new ArrayList<>();
+        Collections.shuffle(mods);
+        for (int i = 0; i < 3 && i < mods.size(); i++) {
+            modEscolha.add(mods.get(i));
+        }
     }
 
     public void tick(){
+        if(!startGame){
+            framesAnimaçãoPontinosIni++;
+            if (framesAnimaçãoPontinosIni == maxFramesPontinhos) {
+                framesAnimaçãoPontinosIni = 0;
+                estadoPontinhos += 1;
+                if (estadoPontinhos > 2){
+                    estadoPontinhos = 0;
+                }
+            }
+            return;
+        }
+
+        if(isUpgrading){
+            return;
+        }
+
         player.tick();
         for (Inimigo inimigo : inimigos) {
             inimigo.tick();
@@ -54,6 +93,12 @@ public class Game extends Canvas implements Runnable, KeyListener {
                     inimigos.remove(inimigo);
                     Player.bullets.remove(b);
                     score+=10;
+
+                    if(score >= upgradeTarget){
+                        apresentarMods();
+                        upgradeTarget *= 2;
+                    }
+
                     i--;
                     break;
                 }
@@ -65,6 +110,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
         if(controleSpawn == targetSpawn){
             spawnRandomInimigo();
             controleSpawn = 0;
+            if(targetSpawn >= 60){
+                targetSpawn--;
+            }
         }
 
     }
@@ -81,18 +129,37 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         world.render(g);
         if (!startGame){
-            int contador;
 
-            for (contador = 0; contador <= 3; contador++){
-                g.setColor(Color.WHITE);
-                g.setFont(new Font("Times New Roman", Font.BOLD, 32));
-                g.drawString("Score: aperte Enter para iniciar...", WIDTH / 2, HEIGHT / 2);
-        }
+            g.setColor(Color.WHITE);
+            g.setFont(new Font("Times New Roman", Font.BOLD, 32));
+
+            if (estadoPontinhos == 0) {
+                textoPontinho = ".";
+            } else if (estadoPontinhos == 1) {
+                textoPontinho = "..";
+            } else {
+                textoPontinho = "...";
+            }
+
+            String mensagem = "Aperte ENTER para iniciar" + textoPontinho;
+
+            int textWidth = g.getFontMetrics().stringWidth(mensagem);
+            int x = (WIDTH - textWidth) / 2;
+            int y = HEIGHT / 2;
+
+            g.drawString(mensagem, x, y);
+
+
+
         }else {
+            if(isUpgrading){
+                upgradingScreen(g);
+            }else {
 
-            player.render(g);
-            for (Inimigo i : inimigos) {
-                i.render(g);
+                player.render(g);
+                for (Inimigo i : inimigos) {
+                    i.render(g);
+                }
             }
 
 
@@ -101,6 +168,23 @@ public class Game extends Canvas implements Runnable, KeyListener {
             g.drawString("Score: " + score, WIDTH - 128, 16);
         }
         bs.show();
+    }
+
+    private void upgradingScreen(Graphics g) {
+        g.setColor(new Color(0,0,0,200));
+        g.fillRect(0,0, WIDTH, HEIGHT);
+
+        g.setColor(Color.WHITE);
+        g.setFont(new Font("Arial", Font.BOLD, 30));
+        g.drawString("Escolha um Upgrade!", WIDTH/2 - 150, 100);
+
+        for (int i = 0; i < mods.size(); i++) {
+            Mod mods = modEscolha.get(i);
+            g.setFont(new Font("Arial", Font.BOLD, 20));
+            g.drawString((i+1) + ". " + mods.nome, 150, 200 + i * 100);
+            g.setFont(new Font("Arial", Font.PLAIN, 15));
+            g.drawString(mods.descricao, 150, 225 + i * 100);
+        }
     }
 
     public static void main(String[] args) {
@@ -122,9 +206,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public static void spawnRandomInimigo(){
         Random rand = new Random();
         int pos = 1024/2, ini = 33, ini2 = HEIGHT - ini;
-        int evento = rand.nextInt(5);
-        System.out.println(ini2);
-        if (!(last == evento && new Random().nextInt(100) > 50)) {
+        int evento = rand.nextInt(4);
+        if (!(last == evento && new Random().nextInt(100) > 25)) {
 
             switch (evento){
                 case 0:
@@ -176,6 +259,16 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
+        if (isUpgrading) {
+            if (e.getKeyCode() >= KeyEvent.VK_1 && e.getKeyCode() <= KeyEvent.VK_3) {
+                int escolha = e.getKeyCode() - KeyEvent.VK_1;
+                if (escolha < modEscolha.size()) {
+                    modEscolha.get(escolha).aplicarEfeito(player);
+                    isUpgrading = false;
+                }
+            }
+            return;
+        }
 
         if (e.getKeyCode() == KeyEvent.VK_ENTER) {
             startGame = true;
