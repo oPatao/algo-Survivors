@@ -7,7 +7,10 @@ import java.io.IOException;
 
 public class Spritesheet {
     public static BufferedImage spritesheet;
+    public static BufferedImage spritesheetInvocacao;
 
+    public static BufferedImage[] invocacao;
+    
     public static BufferedImage[] playerFront;
     public static BufferedImage[] playerBack;
     public static BufferedImage[] playerLeft;
@@ -98,6 +101,23 @@ public class Spritesheet {
         skeliRight[1] = Spritesheet.getSprite(34, 275, 28,43);
         skeliRight[2] = Spritesheet.getSprite(66, 275, 28,43);
         skeliRight[3] = Spritesheet.getSprite(98, 275, 28,43);
+        int n;
+
+
+
+        try{
+            spritesheetInvocacao = ImageIO.read(getClass().getResource("/invocacaoDoSkelli.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        invocacao = new BufferedImage[68];
+        for (int i = 0; i < 68; i++) {
+            n= 32 * i;
+            invocacao[i] = Spritesheet.getSpriteInvocacao(n, 0, 32,79);
+            
+        }
+        
 
 
         try{
@@ -119,6 +139,10 @@ public class Spritesheet {
 
     public static BufferedImage getSprite(int x, int y, int width, int height) throws IOException {
         return spritesheet.getSubimage(x, y, width, height);
+
+    }
+    public static BufferedImage getSpriteInvocacao(int x, int y, int width, int height) throws IOException {
+        return spritesheetInvocacao.getSubimage(x, y, width, height);
 
     }
 }

@@ -18,6 +18,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public static Logo logo;
     public static List<Inimigo> inimigos = new ArrayList<Inimigo>();
     public static List<SkeliAss> skeliAsses = new ArrayList<SkeliAss>();
+    public static Invocacao invocacao;
     public static int score = 0;
 
     private enum GameState {
@@ -361,6 +362,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
             }
         }
         if(nivel == 5 && spawnBoss == 0){
+            invocacao.add(new Invocacao(120,120));
+            for (int i = 0; i < 2000; i++) {
+                invocacao.invocacaoTick();
+            }
             spawnBossSkeli();
         }
 
@@ -423,6 +428,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
     }
     private void renderJogando(Graphics g) {
         player.render(g);
+        invocacao.invocacaoRender(g);
+
         for (Inimigo i : inimigos) {
             i.render(g);
         }
