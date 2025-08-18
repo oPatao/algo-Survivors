@@ -16,7 +16,6 @@ public class Logo extends Rectangle {
     public void tick(int altura){
         if (y <= altura/4){
             y += spd;
-            System.out.println(y);
         }
 
     }

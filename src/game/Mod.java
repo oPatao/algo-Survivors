@@ -5,7 +5,8 @@ public class Mod {
     public enum EFEITO{
         AUMENTAR_VELOCIDADE,
         AUMENTAR_CADENCIA,
-        AUMENTAR_QUANTIDADE_TIRO
+        AUMENTAR_QUANTIDADE_TIRO,
+        AUMENTAR_VIDA
     }
 
     public EFEITO efeito;
@@ -27,6 +28,9 @@ public class Mod {
                 this.nome = "arremesso duplo";
                 this.descricao = "aumenta a quantidade de arremesso em +1";
                 break;
+            case AUMENTAR_VIDA:
+                this.nome = "Poção de vida";
+                this.descricao = "aumenta a vida em +1";
         }
     }
     public void aplicarEfeito(Player player){
@@ -39,6 +43,9 @@ public class Mod {
                 break;
             case AUMENTAR_QUANTIDADE_TIRO:
                 player.modTiros +=1;
+                break;
+            case AUMENTAR_VIDA:
+                player.vida +=1;
                 break;
         }
 
