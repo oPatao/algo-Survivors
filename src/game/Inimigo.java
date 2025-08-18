@@ -13,6 +13,8 @@ public class Inimigo extends Rectangle {
     public int spd = 2, curAnimation = 0, curFrame = 0, targetFrame = 15;
     public BufferedImage direcao = Spritesheet.zumbiFrente[0];
 
+    Color sombra = new Color(0, 0, 0, 90);
+
     public Inimigo(int x, int y) {
         super(x,y,32,32);
     }
@@ -155,6 +157,9 @@ public class Inimigo extends Rectangle {
     public void render(Graphics g){
         //g.setColor(Color.CYAN);
         //g.fillRect(x,y,width,height);
+        g.setColor(sombra);
+        g.fillOval(x,y + 22,32,16);
         g.drawImage(direcao,x,y,32,32,null);
+
     }
 }

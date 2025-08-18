@@ -8,9 +8,10 @@ import java.util.Random;
 
 public class SkeliAss extends Rectangle {
 
-    public int spd = 4, curAnimation = 0, curFrame = 0, targetFrame = 15, vida = 300;
+    public int spd = 4, curAnimation = 0, curFrame = 0, targetFrame = 10, vida = 200;
     public BufferedImage direcao = Spritesheet.skeliFrente[0];
 
+    Color sombra = new Color(0, 0, 0, 127);
     public SkeliAss(int x, int y) {
         super(x,y,28,43);
     }
@@ -35,12 +36,12 @@ public class SkeliAss extends Rectangle {
                 x+=spd;
             }
 
-            direcao =Spritesheet.skeliRight[curAnimation];
+            direcao = Spritesheet.skeliRight[curAnimation];
             curFrame++;
             if (curFrame == targetFrame) {
                 curFrame = 0;
                 curAnimation++;
-                if (curAnimation >= 2) {
+                if (curAnimation >= 3) {
                     curAnimation = 0;
                 }
             }
@@ -54,7 +55,7 @@ public class SkeliAss extends Rectangle {
             if (curFrame == targetFrame) {
                 curFrame = 0;
                 curAnimation++;
-                if (curAnimation >= 2) {
+                if (curAnimation >= 3) {
                     curAnimation = 0;
                 }
             }
@@ -64,12 +65,12 @@ public class SkeliAss extends Rectangle {
                 y+=spd;
             }
 
-            direcao = Spritesheet.skeliBack[curAnimation];
+            direcao = Spritesheet.skeliFrente[curAnimation];
             curFrame++;
             if (curFrame == targetFrame) {
                 curFrame = 0;
                 curAnimation++;
-                if (curAnimation >= 2) {
+                if (curAnimation >= 3) {
                     curAnimation = 0;
                 }
             }
@@ -78,12 +79,12 @@ public class SkeliAss extends Rectangle {
                 y-=spd;
             }
 
-            direcao = Spritesheet.skeliFrente[curAnimation];
+            direcao = Spritesheet.skeliBack[curAnimation];
             curFrame++;
             if (curFrame == targetFrame) {
                 curFrame = 0;
                 curAnimation++;
-                if (curAnimation >= 2) {
+                if (curAnimation >= 3) {
                     curAnimation = 0;
                 }
             }
@@ -153,6 +154,9 @@ public class SkeliAss extends Rectangle {
     public void render(Graphics g){
         //g.setColor(Color.CYAN);
         //g.fillRect(x,y,width,height);
+        g.setColor(sombra);
+        g.fillOval(x,y + 36,28,16);
         g.drawImage(direcao,x,y,28,43,null);
+
     }
 }

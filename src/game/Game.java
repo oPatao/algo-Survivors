@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class Game extends Canvas implements Runnable, KeyListener {
-    public static int WIDTH = 1024, HEIGHT = 1024;
+    public static int WIDTH = 1024, HEIGHT = 768;
     public static Player player;
     public World world;
     public static Logo logo;
@@ -34,8 +34,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
     private int charIndex = 0;
 
 
-    public static int controleSpawn = 0, targetSpawn = 120, lastSpawn = 6,
-            upgradeTarget = 100, nivel = 0,
+    public static int controleSpawn = 0, targetSpawn = 60, lastSpawn = 6,
+            upgradeTarget = 50, nivel = 0,
             spawnBoss = 0, skeliChance= 120, bossTemp = 2000, temp = 0;
     public static boolean bossFight = false;
 
@@ -79,8 +79,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         Player.bullets.clear();
         skeliAsses.clear();
         score = 0;
-        upgradeTarget = 100;
-        targetSpawn = 120;
+        upgradeTarget = 50;
+        targetSpawn = 60;
         nomeJogador = "AAA";
         charIndex = 0;
         spawnBoss = 0;
@@ -674,7 +674,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
                     }
                     break;
                 case 4:
-                    if (rand.nextInt(100)  < skeliChance){
+                    if (rand.nextInt(100)  >= skeliChance){
                         skeliAsses.add(new SkeliAss(120,120));
                         skeliChance--;
                     } else {

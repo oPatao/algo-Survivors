@@ -95,6 +95,9 @@ public class Spritesheet {
 
         skeliRight = new BufferedImage[4];
         skeliRight[0] = Spritesheet.getSprite(2, 275, 28,43);
+        skeliRight[1] = Spritesheet.getSprite(34, 275, 28,43);
+        skeliRight[2] = Spritesheet.getSprite(66, 275, 28,43);
+        skeliRight[3] = Spritesheet.getSprite(98, 275, 28,43);
 
 
         try{
