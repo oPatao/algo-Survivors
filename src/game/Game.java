@@ -37,8 +37,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public static int controleSpawn = 0, targetSpawn = 60, lastSpawn = 6,
             upgradeTarget = 50, nivel = 0,
-            spawnBoss = 0, skeliChance= 120, bossTemp = 2000, temp = 0;
-    public static boolean bossFight = false;
+            spawnBoss = 0, skeliChance= 120, tempSpawnBoss = 0;
+    public static boolean bossFight = false, sequenciaSpawn = false;
+    public static final int TEMPO_SPAWN_BOSS = 250;
+    private Point posicaoInvocacao;
 
     private int framesAnimaçãoPontos = 0, maxFramesPontos = 20, estadoPontos = 0;
     private String textoPontos = ".";
@@ -59,6 +61,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         }
         player = new Player(WIDTH/2,HEIGHT/2);
         world = new World(WIDTH, HEIGHT);
+        invocacao = new Invocacao();
         gerenciadorDeHighscore = new GerenciadorDeHighscore();
 
         logo = new Logo((WIDTH/2) -288, 0);
@@ -85,6 +88,8 @@ public class Game extends Canvas implements Runnable, KeyListener {
         nomeJogador = "AAA";
         charIndex = 0;
         spawnBoss = 0;
+        sequenciaSpawn = false;
+        tempSpawnBoss = 0;
         nivel = 0;
         skeliChance = 80;
         bossFight = false;
@@ -276,12 +281,21 @@ public class Game extends Canvas implements Runnable, KeyListener {
     }
     private void tickJogando() {
 
-        if(temp >= bossTemp ){
-            bossFight = false;
-        }else if(temp <= bossTemp && bossFight == true ){
-            temp++;
-        }
-        if(!bossFight) controleSpawn++;
+        if(sequenciaSpawn){
+            tempSpawnBoss++;
+            invocacao.invocacaoTick();
+            inimigos.clear();
+
+            if(tempSpawnBoss == TEMPO_SPAWN_BOSS){
+                spawnBossSkeli(120, 120);
+            }
+
+            if (tempSpawnBoss >= TEMPO_SPAWN_BOSS+170) {
+                sequenciaSpawn = false;
+            }
+            return;
+
+        }else {}
 
         player.tick();
 
@@ -299,7 +313,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 if (b.intersects(inimigo)) {
                     inimigos.remove(j);
                     Player.bullets.remove(i);
-                    score += 10;
+                    score += 200;
                     if (score >= upgradeTarget) {
                         apresentarMods();
                         upgradeTarget *= 2;
@@ -322,6 +336,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
                     }else{
                         skeliAsses.remove(j);
                         score += 1000;
+                        bossFight = false;
                     }
 
                     if (score >= upgradeTarget) {
@@ -362,14 +377,13 @@ public class Game extends Canvas implements Runnable, KeyListener {
             }
         }
         if(nivel == 5 && spawnBoss == 0){
-            invocacao.add(new Invocacao(120,120));
-            for (int i = 0; i < 2000; i++) {
-                invocacao.invocacaoTick();
-            }
-            spawnBossSkeli();
+            sequenciaSpawn = true;
+            tempSpawnBoss = 0;
+            //posicaoInvocacao = new Point(player.x, player.y - 50);
+            invocacao.invocar(120,120);
         }
 
-
+        controleSpawn++;
         if (controleSpawn >= targetSpawn && !bossFight) {
             spawnRandomInimigo();
             controleSpawn = 0;
@@ -428,7 +442,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
     }
     private void renderJogando(Graphics g) {
         player.render(g);
-        invocacao.invocacaoRender(g);
+        if (sequenciaSpawn) {
+            invocacao.invocacaoRender(g);
+        }
 
         for (Inimigo i : inimigos) {
             i.render(g);
@@ -694,10 +710,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         lastSpawn = evento;
     }
-    public static void spawnBossSkeli(){
+    public static void spawnBossSkeli(int x, int y){
         bossFight = true;
         inimigos.clear();
-        skeliAsses.add(new SkeliAss(120,120));
+        skeliAsses.add(new SkeliAss(x+2,y+23));
         spawnBoss = 1;
 
 
