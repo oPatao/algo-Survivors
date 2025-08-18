@@ -19,7 +19,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public static Logo logo;
 
     public static List<Inimigo> inimigos = new ArrayList<Inimigo>();
-    public static int controleSpawn = 0, targetSpawn = 120, last = 6, score = 0, upgradeTarget = 100;
+    public static int controleSpawn = 0, targetSpawn = 120, last = 6, score = 0, upgradeTarget = 100, nivel = 0;
 
     private int framesAnimaçãoPontinosIni = 0, maxFramesPontinhos = 20, estadoPontinhos = 0;
     private String textoPontinho = ".";
@@ -109,6 +109,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
                     if(score >= upgradeTarget){
                         apresentarMods();
                         upgradeTarget *= 2;
+                        nivel++;
                     }
 
                     i--;
@@ -219,32 +220,45 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     public static void spawnRandomInimigo(){
         Random rand = new Random();
-        int pos = 1024/2, ini = 33, ini2 = HEIGHT - ini;
-        int evento = rand.nextInt(4);
-        if (!(last == evento && new Random().nextInt(100) > 25)) {
+        int pos = HEIGHT / 2;
+        int bordaEsquerda = 33;
+        int bordaDireita = WIDTH - 64;
+        int bordaCima = 33;
+        int bordaBaixo = HEIGHT - 64;
 
-            switch (evento){
+        int evento = rand.nextInt(4);
+
+
+        if (!(last == evento && rand.nextInt(100) > 25)) {
+
+            int nZumbi = rand.nextInt(nivel+1) + 1;
+
+            int offset = (nZumbi / 2) * 32;
+
+            switch (evento) {
                 case 0:
-                    inimigos.add(new Inimigo(ini,pos-32));
-                    inimigos.add(new Inimigo(ini,pos));
-                    inimigos.add(new Inimigo(ini,pos+32));
+                    for (int i = 0; i < nZumbi; i++) {
+                        int spawnY = pos - offset + (i * 32);
+                        inimigos.add(new Inimigo(bordaEsquerda, spawnY));
+                    }
                     break;
                 case 1:
-                    inimigos.add(new Inimigo(ini2 - ini,pos-32));
-                    inimigos.add(new Inimigo(ini2 - ini, pos));
-                    inimigos.add(new Inimigo(ini2 - ini,pos+32));
+                    for (int i = 0; i < nZumbi; i++) {
+                        int spawnY = pos - offset + (i * 32);
+                        inimigos.add(new Inimigo(bordaDireita, spawnY));
+                    }
                     break;
                 case 2:
-                    inimigos.add(new Inimigo(pos-32, ini));
-                    inimigos.add(new Inimigo(pos, ini));
-                    inimigos.add(new Inimigo(pos+32,ini));
+                    for (int i = 0; i < nZumbi; i++) {
+                        int spawnX = pos - offset + (i * 32);
+                        inimigos.add(new Inimigo(spawnX, bordaCima));
+                    }
                     break;
                 case 3:
-                    inimigos.add(new Inimigo(pos-32,ini2 - ini));
-                    inimigos.add(new Inimigo(pos, ini2 - ini));
-                    inimigos.add(new Inimigo(pos+32, ini2 - ini));
-                    break;
-                default:
+                    for (int i = 0; i < nZumbi; i++) {
+                        int spawnX = pos - offset + (i * 32);
+                        inimigos.add(new Inimigo(spawnX, bordaBaixo));
+                    }
                     break;
             }
         }
