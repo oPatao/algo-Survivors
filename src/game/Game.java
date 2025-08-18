@@ -17,6 +17,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
     public World world;
     public static Logo logo;
     public static List<Inimigo> inimigos = new ArrayList<Inimigo>();
+    public static List<SkeliAss> skeliAsses = new ArrayList<SkeliAss>();
     public static int score = 0;
 
     private enum GameState {
@@ -33,8 +34,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
     private int charIndex = 0;
 
 
-    public static int controleSpawn = 0, targetSpawn = 120, lastSpawn = 6, upgradeTarget = 100, nivel = 0, spawnBoss = 0;
-
+    public static int controleSpawn = 0, targetSpawn = 120, lastSpawn = 6,
+            upgradeTarget = 100, nivel = 0,
+            spawnBoss = 0, skeliChance= 120, bossTemp = 2000, temp = 0;
+    public static boolean bossFight = false;
 
     private int framesAnimaçãoPontos = 0, maxFramesPontos = 20, estadoPontos = 0;
     private String textoPontos = ".";
@@ -57,7 +60,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         world = new World(WIDTH, HEIGHT);
         gerenciadorDeHighscore = new GerenciadorDeHighscore();
 
-        logo = new Logo((WIDTH/2) -144, 0);
+        logo = new Logo((WIDTH/2) -288, 0);
 
 
         //gerenciadorDeHighscore.resetPontos();
@@ -74,6 +77,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         player.resetaPlayer(WIDTH/2, HEIGHT/2);
         inimigos.clear();
         Player.bullets.clear();
+        skeliAsses.clear();
         score = 0;
         upgradeTarget = 100;
         targetSpawn = 120;
@@ -81,8 +85,10 @@ public class Game extends Canvas implements Runnable, KeyListener {
         charIndex = 0;
         spawnBoss = 0;
         nivel = 0;
+        skeliChance = 80;
+        bossFight = false;
 
-        inimigos.add(new Inimigo(63,64));
+        BackgroundMusica.play();
         BackgroundMusica.loopIni(1, 7);
     }
 
@@ -268,9 +274,21 @@ public class Game extends Canvas implements Runnable, KeyListener {
         }
     }
     private void tickJogando() {
+
+        if(temp >= bossTemp ){
+            bossFight = false;
+        }else if(temp <= bossTemp && bossFight == true ){
+            temp++;
+        }
+        if(!bossFight) controleSpawn++;
+
         player.tick();
+
         for (int i = 0; i < inimigos.size(); i++) {
             inimigos.get(i).tick();
+        }
+        for (int i = 0; i < skeliAsses.size(); i++) {
+            skeliAsses.get(i).tick();
         }
 
         for (int i = 0; i < Player.bullets.size(); i++) {
@@ -281,6 +299,30 @@ public class Game extends Canvas implements Runnable, KeyListener {
                     inimigos.remove(j);
                     Player.bullets.remove(i);
                     score += 10;
+                    if (score >= upgradeTarget) {
+                        apresentarMods();
+                        upgradeTarget *= 2;
+                    }
+
+                    i--;
+                    break;
+                }
+            }
+        }
+        for (int i = 0; i < Player.bullets.size(); i++) {
+            Bullet b = Player.bullets.get(i);
+            for (int j = 0; j < skeliAsses.size(); j++) {
+                SkeliAss skeliAss = skeliAsses.get(j);
+                if (b.intersects(skeliAss)) {
+                    Player.bullets.remove(i);
+
+                    if (skeliAss.vida >= 0) {
+                        skeliAss.vida--;
+                    }else{
+                        skeliAsses.remove(j);
+                        score += 1000;
+                    }
+
                     if (score >= upgradeTarget) {
                         apresentarMods();
                         upgradeTarget *= 2;
@@ -305,9 +347,25 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 }
             }
         }
+        for (int i = 0; i < skeliAsses.size(); i++) {
+            SkeliAss skeliAss = skeliAsses.get(i);
+            if (player.intersects(skeliAss)) {
+                skeliAsses.remove(i);
+                player.vida = player.vida - 5;
+                i--;
+                if (player.vida <= 0) {
+                    estadoAtual = GameState.GAME_OVER_INPUT;
+                    BackgroundMusica.stop();
+                    return;
+                }
+            }
+        }
+        if(nivel == 5 && spawnBoss == 0){
+            spawnBossSkeli();
+        }
 
-        controleSpawn++;
-        if (controleSpawn >= targetSpawn) {
+
+        if (controleSpawn >= targetSpawn && !bossFight) {
             spawnRandomInimigo();
             controleSpawn = 0;
             if (targetSpawn > 60) {
@@ -368,11 +426,15 @@ public class Game extends Canvas implements Runnable, KeyListener {
         for (Inimigo i : inimigos) {
             i.render(g);
         }
+        for(SkeliAss i : skeliAsses){
+            i.render(g);
+        }
 
         g.setColor(Color.GREEN);
         g.setFont(new Font("Arial", Font.BOLD, 20));
         g.drawString("Score: " + score, WIDTH - 150, 30);
         g.drawString("Vida: " + player.vida, 30, 30);
+        g.drawString("nivel: "+nivel, WIDTH/2, 30);
     }
     private void renderGameOverInput(Graphics g) {
         g.setColor(Color.RED);
@@ -387,11 +449,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
         textWidth = g.getFontMetrics().stringWidth(msgNome);
         g.drawString(msgNome, (WIDTH - textWidth) / 2, HEIGHT / 2);
 
-        // Desenha as 3 letras do nome
+
         for (int i = 0; i < 3; i++) {
-            // Desenha um sublinhado a piscar para a letra atual
+
             if (i == charIndex) {
-                if ((framesAnimaçãoPontos / 10) % 2 == 0) { // Lógica para piscar
+                if ((framesAnimaçãoPontos / 10) % 2 == 0) {
                     g.setColor(Color.YELLOW);
                     g.fillRect((WIDTH / 2 - 60) + i * 50, HEIGHT / 2 + 75, 40, 5);
                 }
@@ -493,9 +555,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
                     if (escolha < modEscolha.size()) {
                         modEscolha.get(escolha).aplicarEfeito(player);
                         estadoAtual = GameState.JOGANDO;
+                        nivel++;
                     }
                 }
-                nivel++;
                 break;
             case GAME_OVER_INPUT:
                 handleGameOverInput(e);
@@ -510,10 +572,9 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
     @Override
     public void keyReleased(KeyEvent e) {
-        if (estadoAtual == GameState.JOGANDO) {
             handlePlayingInput(e, false);
 
-        }
+
     }
 
     private void handlePlayingInput(KeyEvent e, boolean isPressed) {
@@ -535,11 +596,11 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
         if (code >= KeyEvent.VK_A && code <= KeyEvent.VK_Z) {
             nomeChars[charIndex] = (char) code;
-            charIndex = (charIndex + 1) % 3; // Avança para a próxima letra
+            charIndex = (charIndex + 1) % 3;
         } else if (code == KeyEvent.VK_LEFT) {
-            charIndex = (charIndex == 0) ? 2 : charIndex - 1; // Volta uma letra
+            charIndex = (charIndex == 0) ? 2 : charIndex - 1;
         } else if (code == KeyEvent.VK_RIGHT) {
-            charIndex = (charIndex + 1) % 3; // Avança uma letra
+            charIndex = (charIndex + 1) % 3;
         } else if (code == KeyEvent.VK_UP) {
             nomeChars[charIndex]++;
             if (nomeChars[charIndex] > 'Z') nomeChars[charIndex] = 'A';
@@ -578,7 +639,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
         int bordaCima = 33;
         int bordaBaixo = HEIGHT - 64;
 
-        int evento = rand.nextInt(4);
+        int evento = rand.nextInt(4 + spawnBoss);
 
 
         if (!(lastSpawn == evento && rand.nextInt(100) > 25)) {
@@ -612,9 +673,26 @@ public class Game extends Canvas implements Runnable, KeyListener {
                         inimigos.add(new Inimigo(spawnX, bordaBaixo));
                     }
                     break;
+                case 4:
+                    if (rand.nextInt(100)  < skeliChance){
+                        skeliAsses.add(new SkeliAss(120,120));
+                        skeliChance--;
+                    } else {
+                        skeliChance--;
+                        spawnRandomInimigo();
+                    }
+                    break;
             }
         }
 
         lastSpawn = evento;
+    }
+    public static void spawnBossSkeli(){
+        bossFight = true;
+        inimigos.clear();
+        skeliAsses.add(new SkeliAss(120,120));
+        spawnBoss = 1;
+
+
     }
 }

@@ -10,7 +10,7 @@ public class Logo extends Rectangle {
 
 
     public Logo(int x, int y) {
-        super(x,y,128, 576);
+        super(x,y,288, 64);
     }
 
     public void tick(int altura){
@@ -20,7 +20,7 @@ public class Logo extends Rectangle {
 
     }
     public void render(Graphics g) {
-        g.drawImage(logo,x,y,null);
+        g.drawImage(logo,x,y, 576,128,null);
 
     }
 }

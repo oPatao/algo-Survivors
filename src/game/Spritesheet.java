@@ -18,6 +18,11 @@ public class Spritesheet {
     public static BufferedImage[] zumbiLeft;
     public static BufferedImage[] zumbiRight;
 
+    public static BufferedImage[] skeliFrente;
+    public static BufferedImage[] skeliBack;
+    public static BufferedImage[] skeliLeft;
+    public static BufferedImage[] skeliRight;
+
     public static BufferedImage[] bullet;
     public static BufferedImage pedra;
     public static BufferedImage grama;
@@ -69,6 +74,27 @@ public class Spritesheet {
         zumbiRight[0] = Spritesheet.getSprite(64, 208, 16,16);
         zumbiRight[1] = Spritesheet.getSprite(80, 208, 16,16);
         zumbiRight[2] = Spritesheet.getSprite(96, 208, 16,16);
+
+        skeliFrente = new BufferedImage[4];
+        skeliFrente[0] = Spritesheet.getSprite(2, 227, 28,43);
+        skeliFrente[1] = Spritesheet.getSprite(34, 227, 28,43);
+        skeliFrente[2] = Spritesheet.getSprite(66, 227, 28,43);
+        skeliFrente[3] = Spritesheet.getSprite(98, 227, 28,43);
+
+        skeliBack = new BufferedImage[4];
+        skeliBack[0] = Spritesheet.getSprite(130, 275, 28,43);
+        skeliBack[1] = Spritesheet.getSprite(162, 275, 28,43);
+        skeliBack[2] = Spritesheet.getSprite(194, 275, 28,43);
+        skeliBack[3] = Spritesheet.getSprite(226, 275, 28,43);
+
+        skeliLeft = new BufferedImage[4];
+        skeliLeft[0] = Spritesheet.getSprite(130, 227, 28,43);
+        skeliLeft[1] = Spritesheet.getSprite(162, 227, 28,43);
+        skeliLeft[2] = Spritesheet.getSprite(194, 227, 28,43);
+        skeliLeft[3] = Spritesheet.getSprite(226, 227, 28,43);
+
+        skeliRight = new BufferedImage[4];
+        skeliRight[0] = Spritesheet.getSprite(2, 275, 28,43);
 
 
         try{
