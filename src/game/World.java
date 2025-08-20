@@ -9,23 +9,22 @@ public class World {
 
     public static List<Blocks> blocos = new ArrayList<Blocks>();
     public static List<Grass> grama = new ArrayList<Grass>();
-
+    public static int j = 0, nBlocoX, nBlocoY, temp = 0;
 
     public World(int x, int y) {
-        int nBlocoX = x/32, nBlocoY = y/32;
-
+        nBlocoX = x/32;
+        nBlocoY = y/32;
         for (int xx =  0; xx < nBlocoX; xx++) {
             for (int yy =  0; yy < nBlocoY; yy++) {
                 grama.add(new Grass(xx*32,yy*32));
             }
         }
 
-
-        for (int xx = 0; xx< nBlocoX; xx++) {
-            blocos.add(new Blocks(xx*32, 0));
-        }
         for (int xx = 0; xx< nBlocoX; xx++) {
             blocos.add(new Blocks(xx*32, y-32));
+        }
+        for (int xx = 0; xx< nBlocoX; xx++) {
+            blocos.add(new Blocks(xx*32, 0));
         }
         for (int xx = 0; xx<nBlocoY; xx++) {
             blocos.add(new Blocks(0, xx*32));
@@ -33,6 +32,11 @@ public class World {
         for (int xx = 0; xx<nBlocoY; xx++) {
             blocos.add(new Blocks(x-32, xx*32));
         }
+
+    }
+    public static void tijolinho(int x, int y){
+        Blocks.troca = 1;
+
     }
 
     public static boolean isFree(int x, int y) {

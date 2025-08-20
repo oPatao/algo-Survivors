@@ -37,7 +37,6 @@ public class Invocacao extends Rectangle {
     }
     public void invocacaoRender(Graphics g){
         if(invocando){
-            // Desenha o frame atual da animação
             g.drawImage(Spritesheet.invocacao[curAnimation], this.x, this.y, 32, 79, null);
         }
     }
