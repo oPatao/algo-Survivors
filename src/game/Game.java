@@ -12,7 +12,7 @@ import java.util.List;
 
 
 public class Game extends Canvas implements Runnable, KeyListener {
-    public static int WIDTH = 1024, HEIGHT = 768;
+    public static int WIDTH = 1024, HEIGHT = 1024;
     public static Player player;
     public World world;
     public static Logo logo;
@@ -134,6 +134,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
             if(tempSpawnBoss == TEMPO_SPAWN_BOSS){
                 spawnBossSkeli(120, 120);
                 Blocks.troca = 1;
+                Grass.troca = 1;
             }
 
             if (tempSpawnBoss >= TEMPO_SPAWN_BOSS+170) {
