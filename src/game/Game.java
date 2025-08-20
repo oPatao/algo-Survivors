@@ -40,7 +40,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
             spawnBoss = 0, skeliChance= 120, tempSpawnBoss = 0;
     public static boolean bossFight = false, sequenciaSpawn = false;
     public static final int TEMPO_SPAWN_BOSS = 250;
-    private Point posicaoInvocacao;
 
     private int framesAnimaçãoPontos = 0, maxFramesPontos = 20, estadoPontos = 0;
     private String textoPontos = ".";
@@ -98,160 +97,6 @@ public class Game extends Canvas implements Runnable, KeyListener {
         BackgroundMusica.loopIni(1, 7);
     }
 
-
-
-   /* public void tick(){
-        if(!startGame){
-
-            logo.tick(HEIGHT);
-            framesAnimaçãoPontinosIni++;
-            if (framesAnimaçãoPontinosIni == maxFramesPontinhos) {
-                framesAnimaçãoPontinosIni = 0;
-                estadoPontinhos += 1;
-                if (estadoPontinhos > 2){
-                    estadoPontinhos = 0;
-                }
-            }
-            return;
-        }
-
-
-        if(isUpgrading){
-            return;
-        }
-
-        player.tick();
-        for (Inimigo inimigo : inimigos) {
-            inimigo.tick();
-        }
-
-        for (int i = 0 ; i < Player.bullets.size(); i++){
-            Bullet b = Player.bullets.get(i);
-            for(int j = 0; j < inimigos.size(); j++){
-                Inimigo inimigo = inimigos.get(j);
-                if(b.intersects(inimigo)){
-                    inimigos.remove(inimigo);
-                    Player.bullets.remove(b);
-                    score+=10;
-
-                    if(score >= upgradeTarget){
-                        apresentarMods();
-                        upgradeTarget *= 2;
-                        nivel++;
-                    }
-
-                    i--;
-                    break;
-                }
-            }
-        }
-
-
-        controleSpawn++;
-        if(controleSpawn == targetSpawn){
-            spawnRandomInimigo();
-            controleSpawn = 0;
-            if(targetSpawn >= 60){
-                targetSpawn--;
-            }
-        }
-
-    }
-    public void render(){
-        BufferStrategy bs = this.getBufferStrategy();
-        if(bs == null){
-            this.createBufferStrategy(3);
-            return;
-        }
-        Graphics g = bs.getDrawGraphics();
-
-        g.setColor(Color.BLACK);
-        g.fillRect(0, 0, WIDTH, HEIGHT);
-
-        world.render(g);
-        if (!startGame){
-            logo.render(g);
-            g.setColor(Color.WHITE);
-            g.setFont(new Font("Times New Roman", Font.BOLD, 32));
-
-            if (estadoPontinhos == 0) {
-                textoPontinho = ".";
-            } else if (estadoPontinhos == 1) {
-                textoPontinho = "..";
-            } else {
-                textoPontinho = "...";
-            }
-
-            String mensagem = "Aperte ENTER para iniciar" + textoPontinho;
-
-            int textWidth = g.getFontMetrics().stringWidth(mensagem);
-            int x = (WIDTH - textWidth) / 2;
-            int y = HEIGHT / 2;
-
-            g.drawString(mensagem, x, y);
-
-
-
-        }else {
-            if(isUpgrading){
-                upgradingScreen(g);
-            }else {
-
-                player.render(g);
-                for (Inimigo i : inimigos) {
-                    i.render(g);
-                }
-            }
-
-
-            g.setColor(Color.green);
-            g.setFont(new Font("Arial", Font.BOLD, 20));
-            g.drawString("Score: " + score, WIDTH - 128, 16);
-        }
-        bs.show();
-    }
-
-
-
-    private void renderUpgradeScreen(Graphics g) {
-        g.setColor(new Color(0,0,0,200));
-        g.fillRect(0,0, WIDTH, HEIGHT);
-
-        g.setColor(Color.WHITE);
-        g.setFont(new Font("Arial", Font.BOLD, 30));
-        g.drawString("Escolha um Upgrade!", WIDTH/2 - 150, 100);
-
-        for (int i = 0; i < mods.size(); i++) {
-            Mod mods = modEscolha.get(i);
-            g.setFont(new Font("Arial", Font.BOLD, 20));
-            g.drawString((i+1) + ". " + mods.nome, 150, 200 + i * 100);
-            g.setFont(new Font("Arial", Font.PLAIN, 15));
-            g.drawString(mods.descricao, 150, 225 + i * 100);
-        }
-    }
-
-    public static void main(String[] args) {
-        Game game = new Game();
-        JFrame frame = new JFrame("Game");
-
-        frame.add(game);
-        frame.setTitle("Game");
-        frame.pack();
-
-        frame.setLocationRelativeTo(null);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        frame.setVisible(true);
-
-
-
-        new Thread(game).start();
-    }
-
-    */
-
-
-
     public void tick() {
         switch (estadoAtual) {
             case MENU:
@@ -288,14 +133,14 @@ public class Game extends Canvas implements Runnable, KeyListener {
 
             if(tempSpawnBoss == TEMPO_SPAWN_BOSS){
                 spawnBossSkeli(120, 120);
+                Blocks.troca = 1;
             }
 
             if (tempSpawnBoss >= TEMPO_SPAWN_BOSS+170) {
                 sequenciaSpawn = false;
             }
             return;
-
-        }else {}
+        }
 
         player.tick();
 
@@ -313,7 +158,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
                 if (b.intersects(inimigo)) {
                     inimigos.remove(j);
                     Player.bullets.remove(i);
-                    score += 200;
+                    score += 10;
                     if (score >= upgradeTarget) {
                         apresentarMods();
                         upgradeTarget *= 2;
@@ -367,6 +212,7 @@ public class Game extends Canvas implements Runnable, KeyListener {
             SkeliAss skeliAss = skeliAsses.get(i);
             if (player.intersects(skeliAss)) {
                 skeliAsses.remove(i);
+                bossFight = false;
                 player.vida = player.vida - 5;
                 i--;
                 if (player.vida <= 0) {

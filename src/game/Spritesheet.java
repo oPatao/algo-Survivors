@@ -27,7 +27,7 @@ public class Spritesheet {
     public static BufferedImage[] skeliRight;
 
     public static BufferedImage[] bullet;
-    public static BufferedImage pedra;
+    public static BufferedImage[] pedra;
     public static BufferedImage grama;
     public static BufferedImage algoLogo;
 
@@ -118,10 +118,15 @@ public class Spritesheet {
             
         }
         
-
+        pedra = new BufferedImage[2];
 
         try{
-            pedra = ImageIO.read(getClass().getResource("/preda1.png"));
+            pedra[0] = ImageIO.read(getClass().getResource("/preda1.png"));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        try{
+            pedra[1] = ImageIO.read(getClass().getResource("/tijolinho.png"));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
