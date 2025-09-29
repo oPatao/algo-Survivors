@@ -1,16 +1,16 @@
-Algo Survivors
+<h1>Algo Survivors</h1>
 
 Um jogo de sobrevivência arcade onde cada partida é uma nova batalha pela maior pontuação.
 
 ![algoSurvivorsMenu](https://github.com/user-attachments/assets/646d1b2a-c0f0-4eb3-b61b-d6741a67e27c)
 
-📖 Sobre o Projeto
+<h2>📖 Sobre o Projeto</h2>
 
 Algo Survivors nasceu de um insight durante um curso de desenvolvimento de jogos: "isso aqui pode ser mais". O que começou como um simples "algo" para aprender e experimentar, evoluiu para um projeto de paixão, inspirado na jogabilidade de clássicos como Journey of the Prairie King (Stardew Valley) e no gênero survivors-like.
 
 O objetivo foi transformar um conceito básico em uma experiência completa, com alta rejogabilidade e um sistema de pontuação que remete aos fliperamas antigos. Este é um projeto que, embora simples em sua essência, representa meu orgulho e minha dedicação em ir além do esperado.
 
-✨ Funcionalidades
+<h2>✨ Funcionalidades</h2>
 
   Hordas de Inimigos: Enfrente ondas crescentes de zumbis e prepare-se para desafios maiores.
 
@@ -33,7 +33,7 @@ O objetivo foi transformar um conceito básico em uma experiência completa, com
 
    Arte e Animações Originais: Todos os tiles, inimigos, animações (incluindo a de invocação do chefe) e a trilha sonora foram criados ou escolhidos para dar vida ao universo de Algo Survivors.
 
-🕹️ Como Jogar
+<h2>🕹️ Como Jogar</h2>
 
 Controles:
 
@@ -44,7 +44,7 @@ Controles:
 Objetivo:
 Sobreviva o máximo de tempo que puder, derrote as hordas de inimigos para acumular pontos e suba de nível para adquirir novos poderes. Seu objetivo final é alcançar a maior pontuação possível e registrar seu nome na história do jogo!
 
-🛠️ Tecnologias Utilizadas
+<h2>🛠️ Tecnologias Utilizadas</h2>
 
     Linguagem: Java
 
@@ -52,7 +52,7 @@ Sobreviva o máximo de tempo que puder, derrote as hordas de inimigos para acumu
 
     Áudio: Java Sound API para a trilha sonora e efeitos.
 
-🚀 Futuro do Projeto
+<h2>🚀 Futuro do Projeto</h2>
 
 Tenho muito orgulho do que Algo Survivors se tornou. Ele é a prova de que com curiosidade e vontade, podemos transformar ideias simples em algo muito maior.
 
